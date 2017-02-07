@@ -9,7 +9,7 @@ Installation
 ************
 
 This script can run in Python 2 or Python 3.  Create a virtualenv and install
-dependencies::
+dependencies:
 
 .. code-block:: console
 
@@ -32,7 +32,7 @@ You need to set up two things before you can use the script::
 Usage
 *****
 
-Run the script, passing your user ID and API key as command-line flags::
+Run the script, passing your user ID and API key as command-line flags:
 
 .. code-block:: console
 
