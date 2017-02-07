@@ -12,14 +12,16 @@ from __future__ import print_function
 
 import itertools
 import sys
-from datetime import datetime, timezone
+
+try:
+    from datetime import timezone
+except ImportError:  #  Python 2
+    from time import timezone
+
+from datetime import datetime
 from xml.etree import ElementTree as ET
 
 import requests
-
-if sys.version_info < (3, 0):
-    print('This script must be run in Python 3.', file=sys.stderr)
-    sys.exit(1)
 
 
 def identity(x):
@@ -161,7 +163,8 @@ def _get_reviews_from_api(user_id, api_key):
             user_id=user_id, api_key=api_key, page_no=page_no
         )
         reviews = ET.fromstring(req.text).find('reviews')
-        yield from reviews
+        for r in reviews:
+            yield r
         if int(reviews.attrib['end']) >= int(reviews.attrib['total']):
             break
 
