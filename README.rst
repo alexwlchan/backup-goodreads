@@ -1,7 +1,7 @@
 backup-goodreads
 ================
 
-This is a Python script for backing up your shelves from Goodreads.  It mimics
+This is a Python script for backing up your reviews from Goodreads.  It mimics
 the `export function <https://www.goodreads.com/help/show/5-how-do-i-import-or-export-my-books>`_
 provided by Goodreads, but in script form.
 
