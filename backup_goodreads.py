@@ -13,11 +13,10 @@ from __future__ import print_function
 import argparse
 import itertools
 import json
-import sys
 
 try:
     from datetime import timezone
-except ImportError:  #  Python 2
+except ImportError:  # Python 2
     from time import timezone
 
 from datetime import datetime
@@ -144,7 +143,7 @@ def _get_data_from_goodreads_api(user_id, api_key, page_no):
         'v': '2',
         'key': api_key,
         'id': user_id,
-        'page': str(page_no)
+        'page': str(page_no),
     })
     if req.status_code != 200:
         raise Exception(
@@ -238,8 +237,7 @@ def read_config():
 def main():
     """Parse the Goodreads API and save the reviews to disk."""
     cfg = read_config()
-
-    reviews = get_password(user_id=cfg['user_id'], api_key=cfg['api_key'])
+    reviews = get_reviews(user_id=cfg['user_id'], api_key=cfg['api_key'])
     json_str = json.dumps(list(reviews), indent=2, sort_keys=True)
     with open(cfg['output'], 'w', encoding='utf-8') as f:
         f.write(json_str)
