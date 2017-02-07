@@ -10,7 +10,9 @@ See the README for more details.
 
 from __future__ import print_function
 
+import argparse
 import itertools
+import json
 import sys
 
 try:
@@ -21,6 +23,7 @@ except ImportError:  #  Python 2
 from datetime import datetime
 from xml.etree import ElementTree as ET
 
+import keyring
 import requests
 
 
@@ -193,24 +196,54 @@ def get_reviews(user_id, api_key):
         yield data
 
 
+def read_config():
+    """Returns configuration for using the script.
+
+    Configuration is read from one of two places:
+     1. The system keychain
+     2. Command-line arguments
+
+    Command-line arguments take precedence over keychain values.  If the
+    keychain values are empty/missing, the command-line switches are required.
+
+    """
+    # Read some initial config from the system keychain: if this doesn't
+    # exist, then we read it from command-line arguments.
+    user_id = keyring.get_password('goodreads', 'user_id')
+    api_key = keyring.get_password('goodreads', 'api_key')
+
+    parser = argparse.ArgumentParser(
+        description='A script to back up reviews from Goodreads.')
+
+    parser.add_argument(
+        '--output', default='goodreads_reviews.json',
+        help='output path for the backup file')
+    parser.add_argument(
+        '--user-id', required=(user_id is None),
+        help='Goodreads user ID')
+    parser.add_argument(
+        '--api-key', required=(api_key is None),
+        help='Goodreads API key (https://www.goodreads.com/api/keys)')
+
+    config = vars(parser.parse_args())
+
+    if config['user_id'] is None:
+        config['user_id'] = user_id
+    if config['api_key'] is None:
+        config['api_key'] = api_key
+
+    return config
+
+
 def main():
     """Parse the Goodreads API and save the reviews to disk."""
-    try:
-        path = sys.argv[1]
-    except IndexError:
-        path = 'goodreads_backup.json'
+    cfg = read_config()
 
-    USER_ID = keyring.get_password('goodreads', 'user_id')
-    API_KEY = keyring.get_password('goodreads', 'api_key')
-
-    reviews = get_reviews(user_id=USER_ID, api_key=API_KEY)
+    reviews = get_password(user_id=cfg['user_id'], api_key=cfg['api_key'])
     json_str = json.dumps(list(reviews), indent=2, sort_keys=True)
-    with open(path, 'w', encoding='utf-8') as f:
+    with open(cfg['output'], 'w', encoding='utf-8') as f:
         f.write(json_str)
-    print('Written backup to %s' % path)
 
 
 if __name__ == '__main__':
-    import json
-    import keyring  # noqa: F401
     main()
