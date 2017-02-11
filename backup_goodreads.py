@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 """A script for backing up your Goodreads library.  Writes a backup to
 `goodreads_backup.json`, or you can provide an alternative name as the first
