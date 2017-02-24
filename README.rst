@@ -8,17 +8,21 @@ provided by Goodreads, but in script form.
 Installation
 ************
 
-This script can run in Python 2 or Python 3.  Create a virtualenv and install
-dependencies:
+To install this script, use pip:
 
 .. code-block:: console
 
-   $ git clone git@github.com:alexwlchan/backup-goodreads.git
-   $ virtualenv env
-   $ source env/bin/activate
-   $ pip install -r requirements.txt
+   $ pip install -e git+git://github.com/alexwlchan/backup-goodreads.git#egg=backup_gooreads
 
-You need to set up two things before you can use the script::
+or `pipsi <https://github.com/mitsuhiko/pipsi>`_:
+
+.. code-block:: console
+
+   $ pipsi install -e git+git://github.com/alexwlchan/backup-goodreads.git#egg=backup_gooreads
+
+You can use Python 2.7 and Python 3.3+.
+
+You need to set up three things before you can use the script::
 
 1. Make your Goodreads reviews public.  This script only uses the basic API,
    not OAuth, and so private reviews can't be backed up.
@@ -36,9 +40,15 @@ Run the script, passing your user ID and API key as command-line flags:
 
 .. code-block:: console
 
-   $ python backup_goodreads.py --user-id=12345678 --api-key=abcdefg123
+   $ backup_goodreads --user-id=12345678 --api-key=abcdefg123
 
 This will write your Goodreads reviews to ``goodreads_reviews.json``.
+
+To see other options, run with the ``--help`` flag:
+
+.. code-block:: console
+
+   $ backup_goodreads --help
 
 License
 *******
